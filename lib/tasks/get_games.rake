@@ -76,30 +76,60 @@ namespace :get_games do
 
           opponent_cs: opponent.stats.minions_killed + opponent.stats.neutral_minions_killed,
           opponent_cs_per_min_zero_to_ten:      opponent.timeline.creeps_per_min_deltas.try(:zero_to_ten),
-          opponent_cs_per_min_ten_to_twenty:    opponent.timeline.creeps_per_min_deltas.try(:ten_to_twtnty),
+          opponent_cs_per_min_ten_to_twenty:    opponent.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
           opponent_cs_per_min_twenty_to_thirty: opponent.timeline.creeps_per_min_deltas.try(:twenty_to_thirty),
           opponent_cs_per_min_thirty_to_end:    opponent.timeline.creeps_per_min_deltas.try(:thirty_to_end),
 
           opponent_damage_taken: opponent.stats.total_damage_taken,
           opponent_damage_taken_per_min: opponent.stats.total_damage_taken / duration,
           opponent_damage_taken_per_min_zero_to_ten:      opponent.timeline.damage_taken_per_min_deltas.try(:zero_to_ten),
-          opponent_damage_taken_per_min_ten_to_twenty:    opponent.timeline.damage_taken_per_min_deltas.try(:ten_to_twtnty),
+          opponent_damage_taken_per_min_ten_to_twenty:    opponent.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
           opponent_damage_taken_per_min_twenty_to_thirty: opponent.timeline.damage_taken_per_min_deltas.try(:twenty_to_thirty),
           opponent_damage_taken_per_min_thirty_to_end:    opponent.timeline.damage_taken_per_min_deltas.try(:thirty_to_end),
 
           opponent_gold: opponent.stats.gold_earned,
           opponent_gold_per_min: opponent.stats.gold_earned / duration,
           opponent_gold_per_min_zero_to_ten:      opponent.timeline.gold_per_min_deltas.try(:zero_to_ten),
-          opponent_gold_per_min_ten_to_twenty:    opponent.timeline.gold_per_min_deltas.try(:ten_to_twtnty),
+          opponent_gold_per_min_ten_to_twenty:    opponent.timeline.gold_per_min_deltas.try(:ten_to_twenty),
           opponent_gold_per_min_twenty_to_thirty: opponent.timeline.gold_per_min_deltas.try(:twenty_to_thirty),
           opponent_gold_per_min_thirty_to_end:    opponent.timeline.gold_per_min_deltas.try(:thirty_to_end),
 
           opponent_xp_per_min_zero_to_ten:      opponent.timeline.xp_per_min_deltas.try(:zero_to_ten),
-          opponent_xp_per_min_ten_to_twenty:    opponent.timeline.xp_per_min_deltas.try(:ten_to_twtnty),
+          opponent_xp_per_min_ten_to_twenty:    opponent.timeline.xp_per_min_deltas.try(:ten_to_twenty),
           opponent_xp_per_min_twenty_to_thirty: opponent.timeline.xp_per_min_deltas.try(:twenty_to_thirty),
           opponent_xp_per_min_thirty_to_end:    opponent.timeline.xp_per_min_deltas.try(:thirty_to_end),
         )
       end
+    end
+  end
+
+  task fix_matches: :environment do
+    client = RiotApi.client
+
+    Match.where('match_creation IS NULL').each do |m|
+      match = client.match(m.match_id)
+      i = 0
+      while i <= 10 && match.nil?
+        puts "retry #{i} of 10"
+        sleep(i)
+        i += 1
+        match = client.match(m.match_id)
+      end
+      participant_id = match.participant_identities.find { |p| p.player.summoner_name == m.summoner.name }.participant_id
+      participant = match.participants.find { |p| p.participant_id == participant_id }
+      opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
+
+      m.update_attributes!(
+        match_creation: Time.at(match.match_creation),
+        cs_per_min_ten_to_twenty:    participant.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
+        damage_taken_per_min_ten_to_twenty:    participant.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
+        gold_per_min_ten_to_twenty:    participant.timeline.gold_per_min_deltas.try(:ten_to_twenty),
+        xp_per_min_ten_to_twenty:    participant.timeline.xp_per_min_deltas.try(:ten_to_twenty),
+        opponent_cs_per_min_ten_to_twenty:    opponent.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
+        opponent_damage_taken_per_min_ten_to_twenty:    opponent.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
+        opponent_gold_per_min_ten_to_twenty:    opponent.timeline.gold_per_min_deltas.try(:ten_to_twenty),
+        opponent_xp_per_min_ten_to_twenty:    opponent.timeline.xp_per_min_deltas.try(:ten_to_twenty),
+      )
     end
   end
 end
