@@ -1,0 +1,68 @@
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 15
+
+Documentation:
+  Enabled: false
+
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'Vagrantfile'
+    - 'Guardfile'
+    - 'config.ru'
+  TargetRubyVersion: 2.3
+
+Rails:
+  Enabled: true
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/StructInheritance:
+  Exclude:
+    - 'app/policies/**/*'
+
+Lint/ShadowingOuterLocalVariable:
+  Exclude:
+    - '**/*.jbuilder'
+
+Style/MethodName:
+  Enabled: false
+
+Style/PredicateName:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Performance/RedundantMerge:
+  Enabled: false
+
+Style/UnneededInterpolation:
+  Enabled: false
+
+Style/SignalException:
+  EnforcedStyle: semantic
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
