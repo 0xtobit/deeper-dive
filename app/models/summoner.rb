@@ -1,5 +1,10 @@
 class Summoner < ActiveRecord::Base
   has_many :matches, inverse_of: :summoner
+
+  # TODO: after_save to use summoner_id instead of name
+
+  validates :name, uniqueness: true
+  validates :riot_id, uniqueness: true
   # TODO uniqueness
 
   def get_new_match_ids
