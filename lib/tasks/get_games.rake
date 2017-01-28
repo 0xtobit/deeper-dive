@@ -6,12 +6,16 @@ namespace :get_games do
       config.api_key = ENV['RIOT_API_KEY']
     end
 
-    Summoner.pluck(:name).each do |summoner_name|
-      summoner = client.get_summoner_by_name(summoner_name)
-      summoner.match_list.each do |_match| # FIXME: iterate _match_ids instead an filter list
-        next if Match.find_by(match_id: _match.match_id)
-
-        match = client.match(_match.match_id)
+    Summoner.all.each do |summoner|
+      summoner.get_new_match_ids.each do |match_id|
+        match = client.match(match_id)
+        i = 0
+        while i <= 10 && match.nil?
+          puts "retry #{i} of 10"
+          sleep(i)
+          i += 1
+          match = client.match(match_id)
+        end
         participant_id = match.participant_identities.find { |p| p.player.summoner_name == summoner.name }.participant_id
         participant = match.participants.find { |p| p.participant_id == participant_id }
         opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
@@ -19,14 +23,14 @@ namespace :get_games do
         duration = match.match_duration/60.0
 
         Match.create!(
-          summoner: Summoner.find_by(name: summoner_name), # FIXME
+          summoner: Summoner.find_by(name: summoner.name),
           champion: CHAMPION_NAME[participant.champion_id],
           lane: participant.timeline.lane,
-          match_id: _match.match_id,
+          match_id: match_id,
           queue: match.queue_type,
           region: match.region,
           season: match.season,
-          match_creation: match.match_creation,
+          match_creation: Time.at(match.match_creation),
           match_duration: match.match_duration,
           match_mode: match.match_mode,
 
@@ -40,26 +44,26 @@ namespace :get_games do
 
           cs: participant.stats.minions_killed + participant.stats.neutral_minions_killed,
           cs_per_min_zero_to_ten:      participant.timeline.creeps_per_min_deltas.try(:zero_to_ten),
-          cs_per_min_ten_to_twenty:    participant.timeline.creeps_per_min_deltas.try(:ten_to_twtnty),
+          cs_per_min_ten_to_twenty:    participant.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
           cs_per_min_twenty_to_thirty: participant.timeline.creeps_per_min_deltas.try(:twenty_to_thirty),
           cs_per_min_thirty_to_end:    participant.timeline.creeps_per_min_deltas.try(:thirty_to_end),
 
           damage_taken: participant.stats.total_damage_taken,
           damage_taken_per_min: participant.stats.total_damage_taken / duration,
           damage_taken_per_min_zero_to_ten:      participant.timeline.damage_taken_per_min_deltas.try(:zero_to_ten),
-          damage_taken_per_min_ten_to_twenty:    participant.timeline.damage_taken_per_min_deltas.try(:ten_to_twtnty),
+          damage_taken_per_min_ten_to_twenty:    participant.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
           damage_taken_per_min_twenty_to_thirty: participant.timeline.damage_taken_per_min_deltas.try(:twenty_to_thirty),
           damage_taken_per_min_thirty_to_end:    participant.timeline.damage_taken_per_min_deltas.try(:thirty_to_end),
 
           gold: participant.stats.gold_earned,
           gold_per_min: participant.stats.gold_earned / duration,
           gold_per_min_zero_to_ten:      participant.timeline.gold_per_min_deltas.try(:zero_to_ten),
-          gold_per_min_ten_to_twenty:    participant.timeline.gold_per_min_deltas.try(:ten_to_twtnty),
+          gold_per_min_ten_to_twenty:    participant.timeline.gold_per_min_deltas.try(:ten_to_twenty),
           gold_per_min_twenty_to_thirty: participant.timeline.gold_per_min_deltas.try(:twenty_to_thirty),
           gold_per_min_thirty_to_end:    participant.timeline.gold_per_min_deltas.try(:thirty_to_end),
 
           xp_per_min_zero_to_ten:      participant.timeline.xp_per_min_deltas.try(:zero_to_ten),
-          xp_per_min_ten_to_twenty:    participant.timeline.xp_per_min_deltas.try(:ten_to_twtnty),
+          xp_per_min_ten_to_twenty:    participant.timeline.xp_per_min_deltas.try(:ten_to_twenty),
           xp_per_min_twenty_to_thirty: participant.timeline.xp_per_min_deltas.try(:twenty_to_thirty),
           xp_per_min_thirty_to_end:    participant.timeline.xp_per_min_deltas.try(:thirty_to_end),
 
