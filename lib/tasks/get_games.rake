@@ -8,10 +8,11 @@ namespace :get_games do
 
     Summoner.all.each do |summoner|
       summoner.get_new_match_ids.each do |match_id|
+        sleep(0.85)
         match = client.match(match_id)
         i = 0
         while i <= 10 && match.nil?
-          puts "retry #{i} of 10"
+          puts "Retry #{i} of 10"
           sleep(i)
           i += 1
           match = client.match(match_id)
