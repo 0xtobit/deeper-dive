@@ -9,7 +9,7 @@ class Summoner < ActiveRecord::Base
 
   def get_new_match_ids
     client = RiotApi.client
-    summoner = client.get_summoner_by_name(name)
+    summoner = riot_id.present? ? client.get_summoner_by_id(riot_id) : client.get_summoner_by_name(name)
 
     existing_match_ids = matches.pluck(:match_id).to_set
     new_match_ids = Set.new
