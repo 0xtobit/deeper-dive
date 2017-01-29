@@ -12,7 +12,7 @@ namespace :get_games do
         match = client.match(match_id)
         i = 0
         while i <= 10 && match.nil?
-          puts "Retry #{i} of 10 for #{summoner.name}"
+          puts "Retry #{i} of 10 for #{summoner.name} with match_id: #{match_id}"
           sleep(i)
           i += 1
           match = client.match(match_id)
