@@ -17,7 +17,7 @@ namespace :get_games do
           i += 1
           match = client.match(match_id)
         end
-        participant_id = match.participant_identities.find { |p| p.player.summoner_name == summoner.name }.participant_id
+        participant_id = match.participant_identities.find { |p| p.player.summoner_id == summoner.riot_id }.participant_id
         participant = match.participants.find { |p| p.participant_id == participant_id }
         opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
 
