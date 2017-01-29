@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170125072827) do
+ActiveRecord::Schema.define(version: 20170129081348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,9 @@ ActiveRecord::Schema.define(version: 20170125072827) do
     t.float    "opponent_xp_per_min_thirty_to_end"
     t.datetime "created_at",                                               null: false
     t.datetime "updated_at",                                               null: false
+    t.string   "opponent_champion"
+    t.string   "opponent_summoner_name"
+    t.integer  "opponent_riot_id"
   end
 
   create_table "summoners", force: :cascade do |t|

@@ -1,10 +1,7 @@
 namespace :get_games do
   desc 'Get all the games from Riot API'
   task matches: :environment do
-    client = RiotLolApi::Client.new do |config|
-      config.region = 'na'
-      config.api_key = ENV['RIOT_API_KEY']
-    end
+    client = RiotApi.client
 
     Summoner.all.each do |summoner|
       sleep(1.0)
@@ -21,6 +18,7 @@ namespace :get_games do
         participant_id = match.participant_identities.find { |p| p.player.summoner_id == summoner.riot_id }.participant_id
         participant = match.participants.find { |p| p.participant_id == participant_id }
         opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
+        opponent_identity = match.participant_identities.find { |p| p.participant_id == opponent.participant_id }
 
         duration = match.match_duration/60.0
 
@@ -70,6 +68,9 @@ namespace :get_games do
           xp_per_min_thirty_to_end:    participant.timeline.xp_per_min_deltas.try(:thirty_to_end),
 
           # statistics
+          opponent_summoner_name: opponent_identity.player.summoner_name,
+          opponent_riot_id: opponent_identity.player.summoner_id,
+          opponent_champion: CHAMPION_NAME[opponent.champion_id],
           opponent_kills: opponent.stats.kills,
           opponent_deaths: opponent.stats.deaths,
           opponent_assists: opponent.stats.assists,
@@ -106,8 +107,29 @@ namespace :get_games do
   end
 
   task fix_matches: :environment do
-    Match.where('match_creation > ?', 1.year.from_now).each do |m|
-      m.update_attributes(match_creation: Time.at(m.match_creation.to_i / 1000.0))
+    client = RiotApi.client
+
+    # Match.where('opponent_champion is NULL').each do |m|
+    Match.all.each do |m|
+      sleep(1.0)
+      match = client.match(m.match_id)
+      i = 0
+      while i <= 10 && match.nil?
+        puts "Retry #{i} of 10 for #{m.summoner.name} with match_id: #{m.match_id}"
+        sleep(i)
+        i += 1
+        match = client.match(m.match_id)
+      end
+      participant_id = match.participant_identities.find { |p| p.player.summoner_id == m.summoner.riot_id }.participant_id
+      participant = match.participants.find { |p| p.participant_id == participant_id }
+
+      opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
+      opponent_identity = match.participant_identities.find { |p| p.participant_id == opponent.participant_id }
+      m.update_attributes(
+        opponent_summoner_name: opponent_identity.player.summoner_name,
+        opponent_riot_id: opponent_identity.player.summoner_id,
+        opponent_champion: CHAMPION_NAME[opponent.champion_id],
+      )
     end
   end
 end
