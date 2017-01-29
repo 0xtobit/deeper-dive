@@ -84,6 +84,8 @@ module MatchAttributes
     client = RiotApi.client
     @match = client.match(match_id)
 
+    return false unless @match
+
     @participant_id = @match.participant_identities.find { |p| p.player.summoner_id == summoner.riot_id }.participant_id
     @participant = @match.participants.find { |p| p.participant_id == @participant_id }
     @opponent = @match.participants.find { |p| p.team_id != @participant.team_id && p.timeline.lane == @participant.timeline.lane }
@@ -91,7 +93,7 @@ module MatchAttributes
 
     @duration = @match.match_duration/60.0
 
-    @match
+    true
   end
 
 end
