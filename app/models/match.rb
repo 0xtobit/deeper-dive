@@ -12,4 +12,6 @@ class Match < ActiveRecord::Base
   validates :season, presence: true
   validates :match_creation, presence: true
   validates :match_duration, presence: true
+
+  include MatchAttributes
 end
