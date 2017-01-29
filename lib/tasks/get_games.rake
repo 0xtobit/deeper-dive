@@ -8,7 +8,7 @@ namespace :get_games do
 
     Summoner.all.each do |summoner|
       summoner.get_new_match_ids.each do |match_id|
-        sleep(0.85)
+        sleep(1.0)
         match = client.match(match_id)
         i = 0
         while i <= 10 && match.nil?
