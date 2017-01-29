@@ -24,7 +24,24 @@ namespace :riot_sync do
       sleep(1.0)
       i = 0
       while !match.set_match && i <=10
-        puts "Retry #{i} of 10 for #{summoner.name} with match_id: #{match_id}"
+        puts "Retry #{i} of 10 for #{match.summoner.name} with match_id: #{match.match_id}"
+        sleep(i)
+        i += 1
+      end
+
+      match.sync
+      puts "Match: #{match_id} for #{summoner.name} failed to save: #{match.errors}" unless match.save
+    end
+  end
+
+  task bad_opponent_matches: :environment do
+    puts "#{Match.where('opponent_champion = champion').count} bad out of #{Match.count}"
+    Match.where('opponent_champion = champion').find_each do |match|
+      puts "trying #{match.match_id}"
+      sleep(1.0)
+      i = 0
+      while !match.set_match && i <=10
+        puts "Retry #{i} of 10 for #{match.summoner.name} with match_id: #{match.match_id}"
         sleep(i)
         i += 1
       end
