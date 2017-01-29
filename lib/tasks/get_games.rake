@@ -7,6 +7,7 @@ namespace :get_games do
     end
 
     Summoner.all.each do |summoner|
+      sleep(1.0)
       summoner.get_new_match_ids.each do |match_id|
         sleep(1.0)
         match = client.match(match_id)
