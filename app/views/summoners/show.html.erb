@@ -1,0 +1,8 @@
+<div class>
+  <h1><%= @summoner.name %></h1>
+  <p><%= @summoner.matches.count %> matches in database</p>
+  <p><%= @summoner.matches.where(winner: true).count %> W / <%= @summoner.matches.where(winner: false).count %> L </p>
+
+  <%= render @matches %>
+  <%= will_paginate @matches %>
+</div>

@@ -1,0 +1,3 @@
+<p><%= match.champion %> <%= match.lane %>: <%= match.kills %> / <%= match.deaths%> / <%= match.assists %> 
+<%= link_to 'Full Match Stats', summoner_match_path(match.summoner, match), class: 'btn' %>
+</p>
