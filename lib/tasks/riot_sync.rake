@@ -21,30 +21,20 @@ namespace :riot_sync do
     end
   end
 
-  task fix_matches: :environment do
-    client = RiotApi.client
-
-    # Match.where('opponent_champion is NULL').each do |m|
-    Match.all.each do |m|
+  task all_matches: :environment do
+    Match.find_each do |match|
       sleep(1.0)
-      match = client.match(m.match_id)
+      m = match.set_match
       i = 0
-      while i <= 10 && match.nil?
-        puts "Retry #{i} of 10 for #{m.summoner.name} with match_id: #{m.match_id}"
+      while i <= 10 && m.nil?
+        puts "Retry #{i} of 10 for #{summoner.name} with match_id: #{match_id}"
         sleep(i)
         i += 1
-        match = client.match(m.match_id)
+        m = match.set_match
       end
-      participant_id = match.participant_identities.find { |p| p.player.summoner_id == m.summoner.riot_id }.participant_id
-      participant = match.participants.find { |p| p.participant_id == participant_id }
 
-      opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
-      opponent_identity = match.participant_identities.find { |p| p.participant_id == opponent.participant_id }
-      m.update_attributes(
-        opponent_summoner_name: opponent_identity.player.summoner_name,
-        opponent_riot_id: opponent_identity.player.summoner_id,
-        opponent_champion: CHAMPION_NAME[opponent.champion_id],
-      )
+      match.sync
+      puts "Match: #{match_id} for #{summoner.name} failed to save: #{match.errors}" unless match.save
     end
   end
 end
