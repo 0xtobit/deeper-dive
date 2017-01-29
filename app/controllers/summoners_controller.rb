@@ -7,7 +7,7 @@ class SummonersController < ApplicationController
 
   def show
     #matches = @summoner.matches.paginate(page: params[:page], per_page: 10)
-    @matches = Match.where(summoner: @summoner).paginate(page: params[:page], per_page: 10)
+    @matches = Match.where(summoner: @summoner).order(match_creation: :desc).paginate(page: params[:page], per_page: 10)
   end
 
   private

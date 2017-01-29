@@ -32,7 +32,7 @@ namespace :get_games do
           queue: match.queue_type,
           region: match.region,
           season: match.season,
-          match_creation: Time.at(match.match_creation),
+          match_creation: Time.at(match.match_creation / 1000.0),
           match_duration: match.match_duration,
           match_mode: match.match_mode,
 
@@ -106,32 +106,8 @@ namespace :get_games do
   end
 
   task fix_matches: :environment do
-    client = RiotApi.client
-
-    Match.where('match_creation IS NULL').each do |m|
-      match = client.match(m.match_id)
-      i = 0
-      while i <= 10 && match.nil?
-        puts "retry #{i} of 10"
-        sleep(i)
-        i += 1
-        match = client.match(m.match_id)
-      end
-      participant_id = match.participant_identities.find { |p| p.player.summoner_name == m.summoner.name }.participant_id
-      participant = match.participants.find { |p| p.participant_id == participant_id }
-      opponent = match.participants.find { |p| p.team_id != participant && p.timeline.lane == participant.timeline.lane }
-
-      m.update_attributes!(
-        match_creation: Time.at(match.match_creation),
-        cs_per_min_ten_to_twenty:    participant.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
-        damage_taken_per_min_ten_to_twenty:    participant.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
-        gold_per_min_ten_to_twenty:    participant.timeline.gold_per_min_deltas.try(:ten_to_twenty),
-        xp_per_min_ten_to_twenty:    participant.timeline.xp_per_min_deltas.try(:ten_to_twenty),
-        opponent_cs_per_min_ten_to_twenty:    opponent.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
-        opponent_damage_taken_per_min_ten_to_twenty:    opponent.timeline.damage_taken_per_min_deltas.try(:ten_to_twenty),
-        opponent_gold_per_min_ten_to_twenty:    opponent.timeline.gold_per_min_deltas.try(:ten_to_twenty),
-        opponent_xp_per_min_ten_to_twenty:    opponent.timeline.xp_per_min_deltas.try(:ten_to_twenty),
-      )
+    Match.where('match_creation > ?', 1.year.from_now).each do |m|
+      m.update_attributes(match_creation: Time.at(m.match_creation.to_i / 1000.0))
     end
   end
 end
