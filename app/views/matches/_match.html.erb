@@ -1,3 +1,8 @@
-<p><%= match.champion %> <%= match.lane %>: <%= match.kills %> / <%= match.deaths%> / <%= match.assists %> 
+<p>
+<%= match.winner ? '[W]' : '[L]' %> <%= match.lane %>: <%= match.champion %>
+(<%= match.kills %>/<%= match.deaths%>/<%= match.assists %>)
+vs
+<%= match.opponent_champion %>
+(<%= match.opponent_kills %>/<%= match.opponent_deaths%>/<%= match.opponent_assists %>)
 <%= link_to 'Full Match Stats', summoner_match_path(match.summoner, match), class: 'btn' %>
 </p>

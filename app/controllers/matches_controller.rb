@@ -5,7 +5,7 @@ class MatchesController < ApplicationController
   end
 
   private
-  
+
   def set_match
     @match = Match.find(params[:id])
   end
