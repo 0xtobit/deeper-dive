@@ -1,3 +1,9 @@
-<li>
-  <%= link_to summoner.name, summoner %>
-</li>
+<%= link_to(summoner, class: 'no-underline navy') do %>
+<article class='mw6 center bg-light-gray br3 pb3-ns mv4 ba b--black-20 hover-bg-white'>
+  <div class='tc'>
+    <h3 class='f2 fw7 tracked'>
+      <%= summoner.name %>
+    </h4>
+  </div>
+</article>
+<% end %>

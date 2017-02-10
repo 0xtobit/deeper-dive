@@ -1,8 +1,71 @@
-<p>
-<%= match.winner ? '[W]' : '[L]' %> <%= match.lane %>: <%= match.champion %>
-(<%= match.kills %>/<%= match.deaths%>/<%= match.assists %>)
-vs
-<%= match.opponent_champion %>
-(<%= match.opponent_kills %>/<%= match.opponent_deaths%>/<%= match.opponent_assists %>)
-<%= link_to 'Full Match Stats', summoner_match_path(match.summoner, match), class: 'btn' %>
-</p>
+<div class='pv3'>
+  <li class='pa3 bg-white pt0 ph0 dark-gray'>
+    <div class='flex items-center pv2 <%= match.winner ? 'navy bg-lightest-blue' : 'red bg-washed-red' %>'>
+      <div class='flex-auto w-20 ttu tc pt2'>
+        <span class='f3 tracked'>
+          <%= match.champion %>
+        </span><br>
+        <span class='f6 gray'>
+          <%= match.kills %>/<%= match.deaths%>/<%= match.assists %>
+        </span>
+      </div>
+      <div class='flex-auto w-20 tc pa2'>
+        <span class='gray ttu tracked-tight'><%= match.lane %></span><br>
+        <span class='f3 ttu dark-gray'>VS</span>
+      </div>
+      <div class='flex-auto w-20 ttu tc pt2'>
+        <span class='f3 tracked'>
+          <%= match.opponent_champion %>
+        </span><br>
+        <span class='f6 gray'>
+        <%= match.opponent_kills %>/<%= match.opponent_deaths%>/<%= match.opponent_assists %>
+        </span>
+      </div>
+    </div>
+
+    <div class='flex pa3'>
+      <div class="flex-auto tr">
+        <span class="f5">
+          <%= match.gold_per_min.round %>
+        </span>
+        <span class="f3 gold bg-dark-gray pa1 br2">
+          <%= number_with_delimiter(match.gold) %>
+        </span>
+      </div>
+      <div class='flex-auto tracked black-30 tc'>
+        gold
+      </div>
+      <div class='flex-auto tl'>
+        <span class="f3 gold bg-dark-gray pa1 br2">
+          <%= number_with_delimiter(match.opponent_gold)%></span>
+        <span class="f5">
+          <%= match.opponent_gold_per_min.round %>
+        </span>
+      </div>
+    </div>
+
+    <div class='flex pa3'>
+      <div class="flex-auto tr">
+        <span class="f5 red">
+          <%= match.damage_dealt_to_champions_per_min.round %>
+        </span>
+        <span class="f3 light-red bg-dark-gray pa1 br2">
+          <%= number_with_delimiter(match.damage_dealt_to_champions) %>
+        </span>
+      </div>
+      <div class='flex-auto tracked-tight tc black-30 tc'>
+        damage
+      </div>
+      <div class='flex-auto tl'>
+        <span class="f3 light-red bg-dark-gray pa1 br2">
+          <%= number_with_delimiter(match.opponent_damage_dealt_to_champions) %></span>
+        <span class="f5 red">
+          <%= match.opponent_damage_dealt_to_champions_per_min.round %>
+        </span>
+      </div>
+    </div>
+    <div class='tc'>
+      <%= link_to 'Full Match Stats', summoner_match_path(match.summoner, match), class: 'f6 tc link dim br-pill no-underline ph3 pv2 mb2 dib bg-dark-gray washed-yellow' %>
+    </div>
+  </li>
+</div>

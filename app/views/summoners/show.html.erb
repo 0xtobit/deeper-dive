@@ -1,8 +1,17 @@
 <div class>
-  <h1><%= @summoner.name %></h1>
-  <p><%= @summoner.matches.count %> matches in database</p>
-  <p><%= @summoner.matches.where(winner: true).count %> W / <%= @summoner.matches.where(winner: false).count %> L </p>
+  <h1 class='f-subheadline ttu tc tracked-mega washed-yellow'><%= @summoner.name %></h1>
+  <hr class="bb bx-washed-yellow">
 
-  <%= render @matches %>
-  <%= will_paginate @matches %>
+  <div class='tc'>
+    <p><%= @summoner.matches.count %> matches in database</p>
+    <p><%= @summoner.matches.where(winner: true).count %> W / <%= @summoner.matches.where(winner: false).count %> L </p>
+  </div>
+
+
+  <ul class='list center mw7'>
+    <%= render @matches %>
+  </ul>
+  <div class='pa3 tc'>
+    <%= will_paginate @matches %>
+  </div>
 </div>

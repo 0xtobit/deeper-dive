@@ -6,14 +6,16 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
   </head>
-  <body>
+  <body class='w-100 center sans-serif'>
 
-    <%= yield %>
+    <section class='mw8-ns center pa3 ph5-ns bg-dark-gray washed-yellow'>
+      <%= yield %>
+    </section>
 
-    <div>
-      <footer class="fs-small text-muted text-center">
-        Deeper Dive isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends.  League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc.  League of Legends © Riot Games, Inc.</span>
-      </footer>
-    </div>
+    <footer class='pv2 ph3 ph4-m ph6-l bg-light-gray'>
+      <p class='f6 tc gray'>
+      Deeper Dive isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends.  League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc.  League of Legends © Riot Games, Inc.</span>
+      </p>
+    </footer>
   </body>
 </html>
