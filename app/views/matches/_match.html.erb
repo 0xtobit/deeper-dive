@@ -1,71 +1,118 @@
 <div class='pv3'>
   <li class='pa3 bg-white pt0 ph0 dark-gray'>
-    <div class='flex items-center pv2 <%= match.winner ? 'navy bg-lightest-blue' : 'red bg-washed-red' %>'>
+    <div class='flex items-center pv2 <%= match.winner ? 'lightest-blue bg-blue' : 'washed-red bg-light-red' %>'>
       <div class='flex-auto w-20 ttu tc pt2'>
-        <span class='f3 tracked'>
+        <span class='f3 b tracked'>
           <%= match.champion %>
         </span><br>
-        <span class='f6 gray'>
+        <spanclass='white'>
           <%= match.kills %>/<%= match.deaths%>/<%= match.assists %>
         </span>
       </div>
-      <div class='flex-auto w-20 tc pa2'>
-        <span class='gray ttu tracked-tight'><%= match.lane %></span><br>
-        <span class='f3 ttu dark-gray'>VS</span>
+      <div class='flex-auto white w-20 tc pa2'>
+        <span class='ttu tracked-tight'><%= match.lane %></span><br>
+        <span class='f3 b ttu'>VS</span>
       </div>
       <div class='flex-auto w-20 ttu tc pt2'>
-        <span class='f3 tracked'>
+        <span class='f3 b tracked'>
           <%= match.opponent_champion %>
         </span><br>
-        <span class='f6 gray'>
+        <span class='white'>
         <%= match.opponent_kills %>/<%= match.opponent_deaths%>/<%= match.opponent_assists %>
         </span>
       </div>
     </div>
 
-    <div class='flex items-center pa3'>
-      <div class="flex-auto tr">
-        <span class="f5">
-          <%= match.gold_per_min.round %>
-        </span>
-        <span class="f3 gold bg-dark-gray pa1 br2">
-          <%= number_with_delimiter(match.gold) %>
-        </span>
+    <div class='mw6 center pt4'>
+      <div class='pv1'>
+        <div class='flex items-center bg-light-yellow pa3'>
+          <div class="flex-auto tc w-30">
+            <span class="f5 b bg-gray light-yellow br2 pa2">
+              <%= match.gold_per_min.round %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+            <span class="f3 pa1 br2">
+              <%= number_with_delimiter(match.gold) %>
+            </span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <span class='bg-gold dark-gray pa1 ph2 br-pill'><%= fa_icon 'money', title: 'Gold' %></span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <span class="f3 pa1 br2">
+              <%= number_with_delimiter(match.opponent_gold)%></span>
+            <span class="f5 b bg-gray light-yellow br2 pa2">
+              <%= match.opponent_gold_per_min.round %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+          </div>
+        </div>
       </div>
-      <div class='flex-auto tracked black-30 tc'>
-        gold
-      </div>
-      <div class='flex-auto tl'>
-        <span class="f3 gold bg-dark-gray pa1 br2">
-          <%= number_with_delimiter(match.opponent_gold)%></span>
-        <span class="f5">
-          <%= match.opponent_gold_per_min.round %>
-        </span>
-      </div>
-    </div>
 
-    <div class='flex items-center pa3'>
-      <div class="flex-auto tr">
-        <span class="f5 red">
-          <%= match.damage_dealt_to_champions_per_min.round %>
+      <div class='pv1'>
+        <div class='flex items-center pa3 bg-washed-red'>
+          <div class="flex-auto tc w-30">
+            <span class="f5 b bg-gray washed-red br2 pa2">
+              <%= match.damage_dealt_to_champions_per_min.round %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+            <span class="f3 pa1 br2">
+              <%= number_with_delimiter(match.damage_dealt_to_champions) %>
+            </span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <span class='bg-red white pa1 ph2 br-pill'><%= fa_icon 'dot-circle-o', title: 'Damage' %></span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <span class="f3 pa1 br2">
+              <%= number_with_delimiter(match.opponent_damage_dealt_to_champions) %></span>
+            <span class="f5 b bg-gray washed-red br2 pa2">
+              <%= match.opponent_damage_dealt_to_champions_per_min.round %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class='pv1'>
+        <div class='flex items-center pa3 bg-light-green'>
+          <div class="flex-auto tc w-30">
+            <span class="f5 b bg-gray light-green br2 pa2">
+              <%= match.cs_per_min.round(1) %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+            <span class="f3 pa1 br2">
+              <%= match.cs %>
+            </span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <!--<span class='bg-green white pa1 ph2 br-pill'><%= fa_icon 'bar-chart-o', title: 'Creep Score' %></span>-->
+            <span class='bg-green b f6 tracked-tight ttu white pa1 ph2 br-pill'>CS</span>
+          </div>
+          <div class='flex-auto tc w-30'>
+            <span class="f3 pa1 br2">
+              <%= match.opponent_cs %></span>
+            <span class="f5 b bg-gray light-green br2 pa2">
+              <%= match.opponent_cs_per_min.round(1) %>
+              <%= fa_icon 'clock-o', title: 'per minute' %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class='f6 tc gray pt3'>
+        <span class='ph2'>
+          <%= match.duration_pretty %>
         </span>
-        <span class="f3 light-red bg-dark-gray pa1 br2">
-          <%= number_with_delimiter(match.damage_dealt_to_champions) %>
+        <span class='ph2'>
+          <%= fa_icon('calendar', title: match.creation_pretty) %>
         </span>
       </div>
-      <div class='flex-auto tracked-tight black-30 tc'>
-        damage
+      <div class='tc pt3'>
+        <%= link_to fa_icon('eye'), summoner_match_path(match.summoner, match), class: 'f6 tc link br-pill no-underline ph3 pv2 mb2 dib bg-gray hover-bg-dark-gray white' %>
       </div>
-      <div class='flex-auto tl'>
-        <span class="f3 light-red bg-dark-gray pa1 br2">
-          <%= number_with_delimiter(match.opponent_damage_dealt_to_champions) %></span>
-        <span class="f5 red">
-          <%= match.opponent_damage_dealt_to_champions_per_min.round %>
-        </span>
-      </div>
-    </div>
-    <div class='tc'>
-      <%= link_to 'Full Match Stats', summoner_match_path(match.summoner, match), class: 'f6 tc link dim br-pill no-underline ph3 pv2 mb2 dib bg-dark-gray washed-yellow' %>
+
     </div>
   </li>
 </div>

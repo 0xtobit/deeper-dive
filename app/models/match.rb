@@ -17,4 +17,21 @@ class Match < ActiveRecord::Base
   validates :match_duration, presence: true
 
   include MatchAttributes
+
+  def cs_per_min
+    (cs || 0) / (match_duration / 60.0)
+  end
+
+  def opponent_cs_per_min
+    opponent_cs / (match_duration / 60.0)
+  end
+
+  def creation_pretty
+    match_creation.in_time_zone('MST').strftime('%b %e, %Y %H:%M %Z')
+  end
+
+  def duration_pretty
+    t = Time.at(match_duration).utc
+    t.strftime("#{t.hour > 0 ? '%kh ' : ''}%Mm")
+  end
 end
