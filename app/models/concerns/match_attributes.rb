@@ -26,7 +26,8 @@ module MatchAttributes
       damage_taken: @participant.stats.total_damage_taken,
       damage_taken_per_min: @participant.stats.total_damage_taken / @duration,
       gold: @participant.stats.gold_earned,
-      gold_per_min: @participant.stats.gold_earned / @duration
+      gold_per_min: @participant.stats.gold_earned / @duration,
+      cs: @participant.stats.minions_killed + @participant.stats.neutral_minions_killed,
      })
 
     if @participant.timeline.try(:damage_taken_per_min_deltas).present?
@@ -40,6 +41,11 @@ module MatchAttributes
         gold_per_min_ten_to_twenty:    @participant.timeline.gold_per_min_deltas.try(:ten_to_twenty),
         gold_per_min_twenty_to_thirty: @participant.timeline.gold_per_min_deltas.try(:twenty_to_thirty),
         gold_per_min_thirty_to_end:    @participant.timeline.gold_per_min_deltas.try(:thirty_to_end),
+
+        cs_per_min_zero_to_ten:      @participant.timeline.creeps_per_min_deltas.try(:zero_to_ten),
+        cs_per_min_ten_to_twenty:    @participant.timeline.creeps_per_min_deltas.try(:ten_to_twenty),
+        cs_per_min_twenty_to_thirty: @participant.timeline.creeps_per_min_deltas.try(:twenty_to_thirty),
+        cs_per_min_thirty_to_end:    @participant.timeline.creeps_per_min_deltas.try(:thirty_to_end),
 
         xp_per_min_zero_to_ten:      @participant.timeline.xp_per_min_deltas.try(:zero_to_ten),
         xp_per_min_ten_to_twenty:    @participant.timeline.xp_per_min_deltas.try(:ten_to_twenty),
