@@ -35,8 +35,8 @@ namespace :riot_sync do
   end
 
   task bad_opponent_matches: :environment do
-    puts "#{Match.where('opponent_champion = champion').count} bad out of #{Match.count}"
-    Match.where('opponent_champion = champion').find_each do |match|
+    puts "#{Match.where('opponent_champion IS NULL').count} no opp out of #{Match.count}"
+    Match.where('opponent_champion IS NULL').find_each do |match|
       puts "trying #{match.match_id}"
       sleep(1.0)
       i = 0

@@ -108,6 +108,7 @@ module MatchAttributes
           opponent_xp_per_min_thirty_to_end:              nil
         })
       end
+    else
       assign_attributes({
         opponent_summoner_name: nil,
         opponent_riot_id: nil,
@@ -123,10 +124,8 @@ module MatchAttributes
         opponent_gold: nil,
         opponent_gold_per_min: nil,
       })
-    else
     end
   end
-
   def set_match
     client = RiotApi.client
     @match = client.match(match_id)
@@ -135,6 +134,7 @@ module MatchAttributes
 
     @participant_id = @match.participant_identities.find { |p| p.player.summoner_id == summoner.riot_id }.participant_id
     @participant = @match.participants.find { |p| p.participant_id == @participant_id }
+
     @opponent = @match.participants.find { |p| p.team_id != @participant.team_id && p.timeline.lane == @participant.timeline.lane }
 
     if @opponent
