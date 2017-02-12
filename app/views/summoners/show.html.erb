@@ -1,14 +1,41 @@
-<h1 class='f-subheadline ttu tc tracked-mega washed-yellow'><%= @summoner.name %></h1>
+<h1 class='f-subheadline ttu tc pb0 tracked-mega washed-yellow'><%= @summoner.name %></h1>
 <hr class="bb bx-washed-yellow">
 
-<div class='pt3 tc flex w-30 center'>
+<div class='pv3 f3 tc flex w-40 center'>
   <div class='flex-auto pt1 ph2 tr'>
     <%= @wins + @losses %> matches<br>
     <%= @wins %> <span class='blue'><%= fa_icon 'thumbs-up' %></span>
     <%= @losses %> <span class='light-red'><%= fa_icon 'thumbs-down' %></span><br>
   </div>
-  <div class='flex-auto ph2 tl'>
-    <span class='f2 b tracked'><%= ((@wins/((@wins + @losses).to_f)) * 100).round %><%= fa_icon 'percent' %></span>
+  <div class='flex-auto ph2 pv1 tl'>
+    <span class='f1 b tracked'><%= @winrate %><%= fa_icon 'percent' %></span>
+  </div>
+</div>
+
+<div class='w-80 pa3 flex center'>
+  <div class='ph3 center'>
+    <div class='f3 flex-auto pv2 pa2 light-pink br-pill ba bw2'>
+      <%= @kda_avg.round(2) %>
+      KDA
+    </div>
+  </div>
+  <div class='ph3 center'>
+    <div class='f3 flex-auto pv2 pa2 yellow br-pill ba bw2'>
+        <%= @gold_per_min_avg.round %>
+        <sup><%= fa_icon 'money' %></sup>&frasl;<sub><%= fa_icon 'clock-o' %></sub>
+    </div>
+  </div>
+  <div class='ph3 center'>
+    <div class='f3 flex-auto pv2 pa2 light-red br-pill ba bw2'>
+      <%= @damage_avg.round %>
+      <sup><%= fa_icon 'dot-circle-o' %></sup>&frasl;<sub><%= fa_icon 'clock-o' %></sub>
+    </div>
+  </div>
+  <div class='ph3 center'>
+    <div class='f3 flex-auto pv2 pa2 light-green br-pill ba bw2'>
+      <%= @cs_per_min_avg.round(1) %>
+      <sup>CS</sup>&frasl;<sub><%= fa_icon 'clock-o' %></sub>
+    </div>
   </div>
 </div>
 

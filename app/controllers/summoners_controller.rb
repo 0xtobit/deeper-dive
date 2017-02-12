@@ -10,9 +10,19 @@ class SummonersController < ApplicationController
     matches_with_opponent = Match.with_opponent.where(summoner: @summoner).order(match_creation: :desc)
     matches = Match.where(summoner: @summoner).order(match_creation: :desc)
     @matches = filter_by_params(matches_with_opponent).paginate(page: params[:page], per_page: 10)
-    matches = filter_by_params(matches).paginate(page: params[:page], per_page: 10)
+    matches = filter_by_params(matches)
+    set_averaged_stats(matches)
+  end
+
+  def set_averaged_stats(matches)
     @wins = matches.where(winner: true).count
     @losses = matches.where(winner: false).count
+    @winrate = (@wins / (@wins + @losses.to_f) * 100).round
+
+    @gold_per_min_avg = matches.sum(:gold_per_min) / matches.count
+    @kda_avg = (matches.sum(:kills) + matches.sum(:assists)) / matches.sum(:deaths).to_f
+    @damage_avg = matches.sum(:damage_dealt_to_champions_per_min) / matches.count
+    @cs_per_min_avg = matches.sum(:cs) / (matches.sum(:match_duration) / 60.0)
   end
 
   private
