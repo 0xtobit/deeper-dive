@@ -1,9 +1,15 @@
 <h1 class='f-subheadline ttu tc tracked-mega washed-yellow'><%= @summoner.name %></h1>
 <hr class="bb bx-washed-yellow">
 
-<div class='tc'>
-  <p><%= @summoner.matches.count %> matches in database</p>
-  <p><%= @summoner.matches.where(winner: true).count %> W / <%= @summoner.matches.where(winner: false).count %> L </p>
+<div class='pt3 tc flex w-20 center'>
+  <div class='flex-auto pt1'>
+    <%= @matches.count %> matches<br>
+    <%= @wins %> <span class='blue'><%= fa_icon 'thumbs-up' %></span>
+    <%= @losses %> <span class='light-red'><%= fa_icon 'thumbs-down' %></span><br>
+  </div>
+  <div class='flex-auto'>
+    <span class='f2 b tracked'><%= ((@wins/(@matches.count.to_f)) * 100).round %><%= fa_icon 'percent' %></span>
+  </div>
 </div>
 
 <ul class='list ph6'>

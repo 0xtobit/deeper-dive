@@ -7,8 +7,12 @@ class SummonersController < ApplicationController
 
   def show
     #matches = @summoner.matches.paginate(page: params[:page], per_page: 10)
-    matches = Match.with_opponent.where(summoner: @summoner).order(match_creation: :desc)
-    @matches = filter_by_params(matches).paginate(page: params[:page], per_page: 10)
+    matches_with_opponent = Match.with_opponent.where(summoner: @summoner).order(match_creation: :desc)
+    matches = Match.where(summoner: @summoner).order(match_creation: :desc)
+    @matches = filter_by_params(matches_with_opponent).paginate(page: params[:page], per_page: 10)
+    matches = filter_by_params(matches).paginate(page: params[:page], per_page: 10)
+    @wins = matches.where(winner: true).count
+    @losses = matches.where(winner: false).count
   end
 
   private
@@ -27,6 +31,7 @@ class SummonersController < ApplicationController
       'fives' =>"TEAM_BUILDER_DRAFT_RANKED_5x5"
     }
     matches = matches.where(queue: queue_params[params[:queue]]) if params.has_key? :queue
+    matches = matches.where(season: queue_params[params[:season]]) if params.has_key? :season
     matches
   end
 end
