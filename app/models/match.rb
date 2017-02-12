@@ -18,8 +18,16 @@ class Match < ActiveRecord::Base
 
   include MatchAttributes
 
+  def kda
+    (kills + deaths) / [assists, 1].max.to_f
+  end
+
+  def opponent_kda
+    (opponent_kills + opponent_deaths) / [opponent_assists, 1].max.to_f
+  end
+
   def cs_per_min
-    (cs || 0) / (match_duration / 60.0)
+    cs / (match_duration / 60.0)
   end
 
   def opponent_cs_per_min
