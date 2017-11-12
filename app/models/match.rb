@@ -3,7 +3,7 @@ class Match < ActiveRecord::Base
   scope :with_opponent, -> { where('opponent_champion IS NOT NULL') }
 
   belongs_to :summoner, inverse_of: :matches
-  # TODO uniqueness
+  has_many :participants, inverse_of: :match
 
   validates :match_id, uniqueness: { scope: :summoner_id }
 

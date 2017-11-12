@@ -33,38 +33,4 @@ namespace :riot_sync do
       puts "Match: #{match_id} for #{summoner.name} failed to save: #{match.errors}" unless match.save
     end
   end
-
-  task bad_opponent_matches: :environment do
-    puts "#{Match.where('opponent_champion IS NULL').count} no opp out of #{Match.count}"
-    Match.where('opponent_champion IS NULL').find_each do |match|
-      puts "trying #{match.match_id}"
-      sleep(1.0)
-      i = 0
-      while !match.set_match && i <=10
-        puts "Retry #{i} of 10 for #{match.summoner.name} with match_id: #{match.match_id}"
-        sleep(i)
-        i += 1
-      end
-
-      match.sync
-      puts "Match: #{match_id} for #{summoner.name} failed to save: #{match.errors}" unless match.save
-    end
-  end
-
-  task bad_cs_matches: :environment do
-    puts "#{Match.where('cs IS NULL').count} no cs out of #{Match.count}"
-    Match.where('cs IS NULL').find_each do |match|
-      puts "trying #{match.match_id}"
-      sleep(1.0)
-      i = 0
-      while !match.set_match && i <=10
-        puts "Retry #{i} of 10 for #{match.summoner.name} with match_id: #{match.match_id}"
-        sleep(i)
-        i += 1
-      end
-
-      match.sync
-      puts "Match: #{match_id} for #{summoner.name} failed to save: #{match.errors}" unless match.save
-    end
-  end
 end
