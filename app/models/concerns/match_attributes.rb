@@ -1,33 +1,20 @@
 module MatchAttributes
   extend ActiveSupport::Concern
 
-  SEASON = {
-    0 => 'PRESEASON 3',
-    1 => 'SEASON 3',
-    2 => 'PRESEASON 2014',
-    3 => 'SEASON 2014',
-    4 => 'PRESEASON 2015',
-    5 => 'SEASON 2015',
-    6 => 'PRESEASON 2016',
-    7 => 'SEASON 2016',
-    8 => 'PRESEASON 2017',
-    9 => 'SEASON 2017'
-  }
-
-
   def sync
     r = Riot::Client.new({})
     match = r.match(match_id)
     assign_attributes(
       match_id: match['gameId'],
-      queue: match['queueId'],
+      queue: QUEUE[match['queueId']],
       region: match['platformId'],
       season: SEASON[match['seasonId']],
       match_creation: Time.at(match['gameCreation'] / 1000.0),
       match_duration: match['gameDuration'],
       match_mode: match['gameMode'],
       match_type: match['gameType'],
-      queue_id: match['gameType']
+      queue_id: match['queueId'],
+      synced_at: Time.now
     )
     blue_team = match['teams'].find { |team| team['teamId'] == 100 }
     red_team = match['teams'].find { |team| team['teamId'] == 200 }
@@ -51,21 +38,25 @@ module MatchAttributes
       blue_vilemaw_kills:     blue_team['vilemawKills'],
       blue_rift_herald_kills: blue_team['riftHeraldKills'],
     )
-    make_participants(match)
+    sync_participants(match)
+    save!
   end
 
-  def make_participants(match)
+  def sync_participants(match)
     (1..10).each do |id|
       _participant = match['participants'].find { |p| p['participantId'] == id }
       _participant_id = match['participantIdentities'].find { |p| p['participantId'] == id }
-      make_participant(_participant, _participant_id)
+      sync_participant(_participant, _participant_id)
     end
   end
 
-  def make_participant(participant, participant_id)
+  def sync_participant(participant, participant_id)
     duration = match_duration / 60.0
-    participants.create(
+    p = Participant.find_or_initialize_by(
+      match_id: id,
       participant_id: participant['participantId'],
+    )
+    p.assign_attributes(
       account_id: participant_id['player']['accountId'],
       lane: participant['timeline']['lane'].downcase,
       role: participant['timeline']['role'].downcase,
@@ -156,5 +147,7 @@ module MatchAttributes
       xp_diff_per_min_twenty_to_thirty: participant['timeline']['xpDiffPerMinDeltas']['20-30'],
       xp_diff_per_min_thirty_to_end:    participant['timeline']['xpDiffPerMinDeltas']['30-end'],
     )
+    p.save!
   end
 end
+

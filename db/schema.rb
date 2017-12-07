@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108064456) do
+ActiveRecord::Schema.define(version: 20171112070333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,12 +26,12 @@ ActiveRecord::Schema.define(version: 20171108064456) do
     t.string   "match_mode"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
-    t.integer  "first_blood"
-    t.integer  "first_tower"
-    t.integer  "first_inhibitor"
-    t.integer  "first_baron"
-    t.integer  "first_dragon"
-    t.integer  "first_rift_herald"
+    t.string   "first_blood"
+    t.string   "first_tower"
+    t.string   "first_inhibitor"
+    t.string   "first_baron"
+    t.string   "first_dragon"
+    t.string   "first_rift_herald"
     t.integer  "red_tower_kills"
     t.integer  "red_inhibitor_kills"
     t.integer  "red_baron_kills"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20171108064456) do
     t.integer  "blue_rift_herald_kills"
     t.string   "match_type"
     t.integer  "queue_id"
+    t.datetime "synced_at"
   end
 
   create_table "participants", force: :cascade do |t|

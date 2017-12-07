@@ -1,11 +1,11 @@
 class UpdateMatchTable < ActiveRecord::Migration
   def change
-    add_column :matches, :first_blood, :integer
-    add_column :matches, :first_tower, :integer
-    add_column :matches, :first_inhibitor, :integer
-    add_column :matches, :first_baron, :integer
-    add_column :matches, :first_dragon, :integer
-    add_column :matches, :first_rift_herald, :integer
+    add_column :matches, :first_blood, :string
+    add_column :matches, :first_tower, :string
+    add_column :matches, :first_inhibitor, :string
+    add_column :matches, :first_baron, :string
+    add_column :matches, :first_dragon, :string
+    add_column :matches, :first_rift_herald, :string
     add_column :matches, :red_tower_kills, :integer
     add_column :matches, :red_inhibitor_kills, :integer
     add_column :matches, :red_baron_kills, :integer
